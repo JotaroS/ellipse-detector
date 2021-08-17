@@ -28,10 +28,10 @@ def crop_image(path):
 
 def draw_ellipse(image):
     # color / thickness
-    brightness = 0
+    brightness = random.randint(0, 255)
     thickness  = 0
-    center     = (64 + random.randint(-20, 20), 64 + random.randint(-20, 20))
-    radius     = random.randint(30, 40)
+    center     = (int(CROP_SIZE/2) + random.randint(-20, 20), int(CROP_SIZE/2)  + random.randint(-20, 20))
+    radius     = random.randint(5, 40)
     axisLength = (radius, radius)
     angle      = 0
     color      = (brightness, brightness, brightness)
@@ -58,13 +58,13 @@ def main():
         img_name = f.split('\\')[1]
         print(img_name)
         img, ellipse_data = process_image(f)
-        metadata.append({
-            'img_name': img_name,
-            'center'  : ellipse_data['center'],
-            'radius'  : ellipse_data['radius']
-        })
         try:
             cv2.imwrite('./cropped/'+img_name, img)
+            metadata.append({
+                'img_name': img_name,
+                'center'  : ellipse_data['center'],
+                'radius'  : ellipse_data['radius']
+            })
         except:
             print(f, 'was not processed properly. skipping...')
 
