@@ -6,6 +6,7 @@ import glob
 import json
 
 DEBUG = True
+ITERATIONS = 5
 CROP_SIZE = 128
 
 def preview_image(path):
@@ -28,7 +29,7 @@ def crop_image(path):
 
 def draw_ellipse(image):
     # color / thickness
-    brightness = random.randint(0, 255)
+    brightness = random.randint(0, 50)
     thickness  = 0
     center     = (int(CROP_SIZE/2) + random.randint(-20, 20), int(CROP_SIZE/2)  + random.randint(-20, 20))
     radius     = random.randint(5, 40)
@@ -55,19 +56,22 @@ def main():
     files = glob.glob("images/*.jpg")
     files.sort()
     metadata = []
+    file_idx = 0;
     for f in files:
-        img_name = f.split('/')[1]
-        print(img_name)
-        img, ellipse_data = process_image(f)
-        try:
-            cv2.imwrite('./cropped/'+img_name, img)
-            metadata.append({
-                'img_name': img_name,
-                'center'  : ellipse_data['center'],
-                'radius'  : ellipse_data['radius']
-            })
-        except:
-            print(f, 'was not processed properly. skipping...')
+        for k in range(0,ITERATIONS):
+            img_name = f.split('\\')[1]
+            img, ellipse_data = process_image(f)
+            try:
+                cv2.imwrite('./cropped/'+str(file_idx)+".jpg", img)
+                metadata.append({
+                    'img_name': str(file_idx)+".jpg",
+                    'center'  : ellipse_data['center'],
+                    'radius'  : ellipse_data['radius']
+                })
+                file_idx += 1
+                print(str(file_idx)+".jpg", 'has been exported.')
+            except:
+                print(f, 'was not processed properly. skipping...')
 
     with open ('labels.json','w') as outfile:
         json.dump(metadata, outfile)
