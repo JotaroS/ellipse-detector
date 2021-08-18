@@ -52,10 +52,11 @@ def process_image(path):
 
 def main():
     # process all data on 'images' folder
-    files = glob.glob("./images/*.jpg")
+    files = glob.glob("images/*.jpg")
+    files.sort()
     metadata = []
     for f in files:
-        img_name = f.split('\\')[1]
+        img_name = f.split('/')[1]
         print(img_name)
         img, ellipse_data = process_image(f)
         try:
