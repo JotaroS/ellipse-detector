@@ -4,6 +4,7 @@ import cv2
 import random
 import glob
 import json
+import numpy as np
 
 DEBUG = True
 ITERATIONS = 5
@@ -27,12 +28,17 @@ def crop_image(path):
     print("[cv] skipping images as it was not larger than 128")
     return None
 
+def gen_random_noise_image():
+    src = np.random.randint(0, 256, (CROP_SIZE, CROP_SIZE, 3), np.uint8)
+    ret = cv2.cvtColor(src, cv2.COLOR_RGB2GRAY)
+    return ret
+
 def draw_ellipse(image):
     # color / thickness
-    brightness = random.randint(0, 50)
+    brightness = random.randint(0, 10)
     thickness  = 0
-    center     = (int(CROP_SIZE/2) + random.randint(-20, 20), int(CROP_SIZE/2)  + random.randint(-20, 20))
-    radius     = random.randint(5, 40)
+    center     = (int(CROP_SIZE/2) + random.randint(-50, 50), int(CROP_SIZE/2) + random.randint(-50, 50))
+    radius     = random.randint(10, 20)
     axisLength = (radius, radius)
     angle      = 0
     color      = (brightness, brightness, brightness)
@@ -58,18 +64,18 @@ def main():
     metadata = []
     file_idx = 0;
     for f in files:
-        for k in range(0,ITERATIONS):
+        for k in range(0, ITERATIONS):
             img_name = f.split('\\')[1]
             img, ellipse_data = process_image(f)
             try:
-                cv2.imwrite('./cropped/'+str(file_idx)+".jpg", img)
+                cv2.imwrite('./cropped/'+str(file_idx).zfill(10)+".jpg", img)
                 metadata.append({
-                    'img_name': str(file_idx)+".jpg",
+                    'img_name': str(file_idx).zfill(10)+".jpg",
                     'center'  : ellipse_data['center'],
                     'radius'  : ellipse_data['radius']
                 })
                 file_idx += 1
-                print(str(file_idx)+".jpg", 'has been exported.')
+                print(str(file_idx).zfill(10)+".jpg", 'has been exported.')
             except:
                 print(f, 'was not processed properly. skipping...')
 
