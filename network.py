@@ -1,9 +1,9 @@
 import tensorflow as tf
-from tensorflow.keras        import Model
-from tensorflow.keras        import layers
-from tensorflow.keras.layers import Conv2D, MaxPooling2D
-from tensorflow.keras.layers import Dense, Dropout, Flatten
-from tensorflow.keras.layers import BatchNormalization
+from   tensorflow.keras        import Model
+from   tensorflow.keras        import layers
+from   tensorflow.keras.layers import Conv2D, MaxPooling2D
+from   tensorflow.keras.layers import Dense, Dropout, Flatten
+from   tensorflow.keras.layers import BatchNormalization
 
 # CNN Block with convolutional layers and processing
 class CNNBlock(layers.Layer):
