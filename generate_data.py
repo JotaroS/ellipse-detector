@@ -67,15 +67,16 @@ def main():
         for k in range(0, ITERATIONS):
             img_name = f.split('\\')[1]
             img, ellipse_data = process_image(f)
+            out_filename = str(file_idx).zfill(10)
             try:
-                cv2.imwrite('./cropped/'+str(file_idx).zfill(10)+".jpg", img)
+                cv2.imwrite('./cropped/'+out_filename+".jpg", img)
                 metadata.append({
-                    'img_name': str(file_idx).zfill(10)+".jpg",
+                    'img_name': out_filename+".jpg",
                     'center'  : ellipse_data['center'],
                     'radius'  : ellipse_data['radius']
                 })
                 file_idx += 1
-                print(str(file_idx).zfill(10)+".jpg", 'has been exported.')
+                print(out_filename+".jpg", 'has been exported.')
             except:
                 print(f, 'was not processed properly. skipping...')
 
