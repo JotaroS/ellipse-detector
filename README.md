@@ -25,4 +25,4 @@ TBD:
 
 ![net](docs/net_architecture.png)
 
-![loss](docs/epoch.png)
+![loss](docs/epoch.PNG)
