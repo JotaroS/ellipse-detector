@@ -6,6 +6,9 @@ import glob
 import json
 import numpy as np
 
+import sys
+import argparse
+
 DEBUG = True
 ITERATIONS = 5
 CROP_SIZE = 128
@@ -57,7 +60,7 @@ def process_image(path):
     drawn, ellipse_data  = draw_ellipse(cropped)
     return drawn, ellipse_data
 
-def main():
+def generate_dataset():
     # process all data on 'images' folder
     files = glob.glob("images/*.jpg")
     files.sort()
@@ -73,17 +76,35 @@ def main():
                 metadata.append({
                     'img_name': out_filename+".jpg",
                     'center'  : ellipse_data['center'],
-                    'radius'  : ellipse_data['radius']
+                    'radius'  : ellipse_data['radius'],
+                    'roundiness' : 1.0
                 })
                 file_idx += 1
                 print(out_filename+".jpg", 'has been exported.')
             except:
+                # this can happen when image has no sufficient size or so.
                 print(f, 'was not processed properly. skipping...')
 
     with open ('labels.json','w') as outfile:
         json.dump(metadata, outfile)
 
-    return;
+
+def get_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--iterations', help="number of synthetic iterations through _whole_ dataset.", type=int)
+
+    args = parser.parse_args()
+    return args
+    
+
+def main():
+    args = get_args();
+    
+    if args.iterations:
+        ITERATIONS = args.iterations
+    
+    generate_dataset()
 
 if __name__ == '__main__':
     main()
