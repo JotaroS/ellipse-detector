@@ -1,5 +1,4 @@
 import numpy  as np
-import pandas as pd
 import glob
 import json
 
@@ -46,8 +45,9 @@ def train():
     model.compile(optimizer = 'adam', loss = 'mean_squared_error', metrics='mean_squared_error')
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=111)
 
-    history = model.fit(X_train, y_train, batch_size=16, epochs=100, validation_data = (X_test, y_test))
-    
+    history = model.fit(X_train, y_train, batch_size=16, epochs=10, validation_data = (X_test, y_test))
+
+    model.save('my_model', save_format='tf')
     pass
 
 def main():
