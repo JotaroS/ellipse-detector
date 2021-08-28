@@ -158,3 +158,5 @@ cython_debug/
 *.jpg
 *.json
 *.csv
+
+my_model*
