@@ -9,7 +9,7 @@ import numpy as np
 import sys
 import argparse
 
-DEBUG = True
+# DEBUG = True
 ITERATIONS = 5
 CROP_SIZE = 128
 
@@ -38,7 +38,7 @@ def gen_random_noise_image():
 
 def draw_ellipse(image):
     # color / thickness
-    brightness = random.randint(0, 10)
+    brightness = random.randint(0, 100)
     thickness  = 0
     center     = (int(CROP_SIZE/2) + random.randint(-50, 50), int(CROP_SIZE/2) + random.randint(-50, 50))
     radius     = random.randint(10, 20)
@@ -55,9 +55,19 @@ def draw_ellipse(image):
     # cv2.imshow("ellipse", drawn)
     return drawn, ellipse_data
 
+def blur_image(src):
+    blur  = random.randint(0,3)
+    ksize = (5, 5)
+    if blur == 0:
+        ret = cv2.blur(src, ksize)
+    else: ret = src
+
+    return ret
+
 def process_image(path):
     cropped              = crop_image(path)
     drawn, ellipse_data  = draw_ellipse(cropped)
+    # drawn                = blur_image(drawn)
     return drawn, ellipse_data
 
 def generate_dataset():
@@ -69,9 +79,9 @@ def generate_dataset():
     for f in files:
         for k in range(0, ITERATIONS):
             img_name = f.split('\\')[1]
-            img, ellipse_data = process_image(f)
-            out_filename = str(file_idx).zfill(10)
             try:
+                img, ellipse_data = process_image(f)
+                out_filename = str(file_idx).zfill(10)
                 cv2.imwrite('./cropped/'+out_filename+".jpg", img)
                 metadata.append({
                     'img_name': out_filename+".jpg",
@@ -80,7 +90,7 @@ def generate_dataset():
                     'roundiness' : 1.0
                 })
                 file_idx += 1
-                print(out_filename+".jpg", 'has been exported.')
+                #print(out_filename+".jpg", 'has been exported.')
             except:
                 # this can happen when image has no sufficient size or so.
                 print(f, 'was not processed properly. skipping...')
