@@ -1,9 +1,10 @@
 import tensorflow as tf
-from   tensorflow.keras        import Model
-from   tensorflow.keras        import layers
-from   tensorflow.keras.layers import Conv2D, MaxPooling2D
-from   tensorflow.keras.layers import Dense, Dropout, Flatten
-from   tensorflow.keras.layers import BatchNormalization
+from   tensorflow.keras                       import Model
+from   tensorflow.keras                       import layers
+from   tensorflow.keras.layers                import Conv2D, MaxPooling2D, Input
+from   tensorflow.keras.layers                import Dense, Dropout, Flatten
+from   tensorflow.keras.layers                import BatchNormalization
+from   tensorflow.keras.applications.resnet50 import ResNet50
 
 # CNN Block with convolutional layers and processing
 class CNNBlock(layers.Layer):
@@ -33,12 +34,25 @@ class EllipseNet(Model):
         self.block2  = CNNBlock(32)
         self.block3  = CNNBlock(64)
         self.flatten = layers.Flatten()
-        self.dense   = layers.Dense(2)
+        self.dense   = layers.Dense(num_classes)
 
     def call(self, input_tensor, training = False):
         x = self.block1(input_tensor, training = training)
         x = self.block2(x, training = training)
         x = self.block3(x, training = training)
+        x = self.flatten(x)
+        return self.dense(x)
+
+class EllipseResNet(Model):
+    def __init__(self, num_classes = 2):
+        super(EllipseResNet, self).__init__()
+        input_tensor = Input(shape=(128, 128, 3))
+        self.resnet  = ResNet50(input_tensor = input_tensor,weights = 'imagenet', include_top = False)
+        self.flatten = layers.Flatten(input_shape=self.resnet.output_shape[1:])
+        self.dense   = layers.Dense(num_classes)
+
+    def call(self, input_tensor, training = False):
+        x = self.resnet(input_tensor, training = training)
         x = self.flatten(x)
         return self.dense(x)
 
