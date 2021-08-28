@@ -8,7 +8,7 @@ class EllipseDataset():
     def __init__(self):
         pass
     
-    def load_dataset(self, DEBUG = False):
+    def load_dataset(self, DEBUG = False, color_mode = 'rgb'):
         X = []
         Y = []
         
@@ -17,10 +17,10 @@ class EllipseDataset():
         if DEBUG is True:files = files[:100]
         files.sort()
         for f in files:
-            temp_img = load_img(f, color_mode='grayscale')
+            temp_img = load_img(f, color_mode=color_mode)
             arr      = img_to_array(temp_img)
             X.append(arr)
-        X = np.asarray(X)
+        X = np.asarray(X, dtype=np.float)
         X = X.astype('float32')
         X = X / 255.0
         
@@ -41,7 +41,7 @@ class EllipseDataset():
         files = glob.glob('./cropped/*.jpg')
         f = files[index]
         X = []
-        temp_img = load_img(f, color_mode='grayscale')
+        temp_img = load_img(f, color_mode=color_mode)
         arr      = img_to_array(temp_img)
         X.append(arr)
         X = np.asarray(X)
