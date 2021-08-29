@@ -37,7 +37,7 @@ class EllipseDataset():
 
         return X, Y
     
-    def load_data(self, index = 0):
+    def load_data(self, index = 0, color_mode = 'rgb'):
         files = glob.glob('./cropped/*.jpg')
         f = files[index]
         X = []

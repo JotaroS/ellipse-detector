@@ -5,6 +5,7 @@ from   tensorflow.keras.layers                import Conv2D, MaxPooling2D, Input
 from   tensorflow.keras.layers                import Dense, Dropout, Flatten
 from   tensorflow.keras.layers                import BatchNormalization
 from   tensorflow.keras.applications.resnet50 import ResNet50
+from   tensorflow.keras.applications          import MobileNetV2
 
 # CNN Block with convolutional layers and processing
 class CNNBlock(layers.Layer):
@@ -55,6 +56,20 @@ class EllipseResNet(Model):
         x = self.resnet(input_tensor, training = training)
         x = self.flatten(x)
         return self.dense(x)
+
+class EllipseMobileNet(Model):
+    def __init__(self, num_classes = 2):
+        super(EllipseMobileNet, self).__init__()
+        input_tensor = Input(shape=(128, 128, 3))
+        self.resnet  = MobileNetV2(input_tensor = input_tensor,weights = 'imagenet', include_top = False)
+        self.flatten = layers.Flatten(input_shape=self.resnet.output_shape[1:])
+        self.dense   = layers.Dense(num_classes)
+
+    def call(self, input_tensor, training = False):
+        x = self.resnet(input_tensor, training = training)
+        x = self.flatten(x)
+        return self.dense(x)
+
 
 # model = EllipseNet()
 # model.compile(optimizer = 'adam', loss='mean_squared_error')
